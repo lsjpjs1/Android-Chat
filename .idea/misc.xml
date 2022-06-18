@@ -3,8 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.459375" />
+        <entry key="app/src/main/res/layout/chat_message_item.xml" value="0.5911458333333334" />
+        <entry key="app/src/main/res/layout/chat_room_item.xml" value="0.21605876393110435" />
         <entry key="app/src/main/res/layout/chat_room_recyclerview.xml" value="0.44375" />
+        <entry key="app/src/main/res/layout/display_chat_messages_fragment.xml" value="0.43697916666666664" />
+        <entry key="app/src/main/res/layout/in_chat_fragment.xml" value="0.43697916666666664" />
         <entry key="app/src/main/res/layout/main_fragment.xml" value="0.44375" />
+        <entry key="app/src/main/res/layout/send_chat_message_fragment.xml" value="0.43697916666666664" />
       </map>
     </option>
   </component>

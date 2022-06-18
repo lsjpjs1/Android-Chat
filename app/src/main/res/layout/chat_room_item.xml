@@ -8,6 +8,7 @@
             type="com.example.myapplication.data.dto.ChatDto.ChatRoomDto" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/chatRoomItemConstraintLayout"
         android:layout_width="match_parent"
         android:layout_height="100dp">
 
