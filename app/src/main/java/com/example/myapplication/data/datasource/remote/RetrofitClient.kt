@@ -9,6 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitClient {
     private lateinit var retrofit: Retrofit
     private val gson = GsonBuilder()
+        .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
         .setLenient()
         .create()
 
@@ -24,7 +25,7 @@ object RetrofitClient {
                 val requestBuilder = chain.request().newBuilder()
                     .removeHeader("User-Agent")
                     .addHeader("User-Agent","Android")
-                    .addHeader("Authorization","Bearer eyJhbGciOiJIUzUxMiJ9.eyJhdXRoIjoiUk9MRV9VU0VSIiwic2Nob29sIjp7InNjaG9vbElkIjoxLCJzY2hvb2xOYW1lIjoiV2FzZWRhIFVuaXZlcnNpdHkiLCJyZWdleCI6IlxcYlteXFxzXStAd2FzZWRhXFwuanBcXGIifSwidXNlck5pY2tuYW1lIjoi7ZuIIiwidXNlckVtYWlsIjoieG9ydWRmbDc3MkBuYXZlci5jb20iLCJ1c2VySWQiOiJhYmNkIiwidXNlckluZm9JZCI6MjE4LCJub3RpZmljYXRpb25Ub2tlbiI6InJpZ2h0Q2FzZSJ9.E0CSycn5hUDS8HFg6dFHn-KQl3CDd7EoDU2gO1CqpsudtYG7daO7X8XliNPn0TNXceMPW2wG-oqbvk3wgxOEpQ")
+                    .addHeader("Authorization","Bearer eyJhbGciOiJIUzUxMiJ9.eyJhdXRoIjoiUk9MRV9VU0VSIiwic2Nob29sIjp7InNjaG9vbElkIjoxLCJzY2hvb2xOYW1lIjoiV2FzZWRhIFVuaXZlcnNpdHkiLCJyZWdleCI6IlxcYlteXFxzXStAd2FzZWRhXFwuanBcXGIifSwidXNlck5pY2tuYW1lIjoiYWRtaW4yIiwidXNlckVtYWlsIjoibHNqcGpzMWRkZGRAd2FzZWRhLmpwIiwidXNlclR5cGUiOjAsInVzZXJJZCI6ImdnZyIsInVzZXJJbmZvSWQiOjE5Miwibm90aWZpY2F0aW9uVG9rZW4iOiJyaWdodENhc2UifQ.ZwLJOaLo40ovtDj_ramn_0KT_iPrFuEafWDTsKnv7QRjSoaiEZMlZ5Koxmhdj_oPrEIogwmCiXAw-vf7y-ZMig")
                 chain.proceed(requestBuilder.build())
             }.build()
             retrofit = Retrofit.Builder()

@@ -30,7 +30,12 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val chatRoomOnClickListener = {chatRoomId:Long -> (activity as MainActivity).replaceFragment(InChatFragment.newInstance(chatRoomId))}
+        val chatRoomOnClickListener = {
+                chatRoomId:Long ->
+            (activity as MainActivity).replaceFragment(InChatFragment.newInstance(chatRoomId))
+            viewModel.clearNotReadCount(chatRoomId)
+
+        }
         val chatRoomsAdapter = ChatRoomsAdapter(chatRoomOnClickListener)
 
         val inflate = inflater.inflate(R.layout.main_fragment, container, false)
@@ -43,7 +48,7 @@ class MainFragment : Fragment() {
 
         viewModel.chatRooms.observe(viewLifecycleOwner, Observer {
             it?.let {
-                chatRoomsAdapter.submitList(it.toList().map { it.second }.toMutableList())
+                chatRoomsAdapter.submitList(it.toList().map { it.second }.sortedByDescending { chatRoomDto -> chatRoomDto.recentMessageTime })
             }
         })
 

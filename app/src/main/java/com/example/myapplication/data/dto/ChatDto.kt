@@ -34,7 +34,8 @@ class ChatDto {
         val chatMessageTime: Timestamp,
         val sendUserInfoId: Long,
         val sendUserNickname: String,
-        val isMine: Boolean
+        val isMine: Boolean,
+        val chatRoomId: Long
     )
 
     data class GetChatMessageResponse(
