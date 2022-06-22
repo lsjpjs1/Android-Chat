@@ -1,21 +1,21 @@
 package com.example.myapplication.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.myapplication.data.datasource.remote.stomp.ChatClient
-import com.example.myapplication.data.datasource.remote.stomp.Event
+import androidx.lifecycle.viewModelScope
+import com.example.myapplication.data.datasource.remote.ChatClient
 import com.example.myapplication.data.dto.ChatDto
 import com.example.myapplication.data.repository.ChatRoomRepository
 import com.google.gson.Gson
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
     private val _chatRooms = MutableLiveData<Map<Long, ChatDto.ChatRoomDto>>()
     val chatRooms = _chatRooms as LiveData<Map<Long, ChatDto.ChatRoomDto>>
 
-    private val chatClient = ChatClient.newInstance()
+
 
     init {
         getChatRooms()
@@ -23,31 +23,25 @@ class MainViewModel : ViewModel() {
     }
 
     fun getChatRooms() {
-        GlobalScope.launch {
-            _chatRooms.postValue(ChatRoomRepository.getChatRooms().map { it.chatRoomId to it }
-                .toMap())
-            chatClient.connect().subscribe {
-                when (it.type) {
-                    Event.Type.OPENED -> {
-                        _chatRooms.value?.forEach { chatRoomId, chatRoom ->
-                            chatClient.join("/topic/"+chatRoomId).subscribe {
-                                it?.let {
-                                    val chatMessageDto: ChatDto.ChatMessageDto =
-                                        Gson().fromJson(it, ChatDto.ChatMessageDto::class.java)
-                                    getCustomMessage(chatMessageDto)
-                                }
-                            }
+        viewModelScope.launch {
+            _chatRooms.value=ChatRoomRepository.getChatRooms().map { it.chatRoomId to it }.toMap()
+
+
+                _chatRooms.value?.forEach { chatRoomId, chatRoom ->
+                    Log.d("chatroomid",chatRoomId.toString())
+                    val chatClient = ChatClient.newInstance()
+                    chatClient.topic("/topic/"+chatRoomId).subscribe {
+                        it?.let {
+                            val chatMessageDto: ChatDto.ChatMessageDto =
+                                Gson().fromJson(it.payload, ChatDto.ChatMessageDto::class.java)
+                            getCustomMessage(chatMessageDto)
                         }
-
                     }
-                    Event.Type.CLOSED -> {
-
-                    }
-                    Event.Type.ERROR -> {
-
-                    }
+                    chatClient.connect()
                 }
-            }
+
+
+
         }
     }
 

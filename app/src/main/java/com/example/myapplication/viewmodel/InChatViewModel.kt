@@ -1,11 +1,9 @@
 package com.example.myapplication.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.myapplication.data.datasource.remote.stomp.ChatClient
-import com.example.myapplication.data.datasource.remote.stomp.Event
+import com.example.myapplication.data.datasource.remote.ChatClient
 import com.example.myapplication.data.dto.ChatDto
 import com.example.myapplication.data.repository.ChatMessageRepository
 import com.google.gson.Gson
@@ -35,25 +33,15 @@ class InChatViewModel : ViewModel() {
     }
 
     fun connectChatRoomSocket(chatRoomId: Long) {
-        chatClient.connect().subscribe {
-            when (it.type) {
-                Event.Type.OPENED -> {
-                    chatClient.join("/topic/" + chatRoomId).subscribe {
-                        it?.let {
-                            val customMessage: ChatDto.ChatMessageDto =
-                                Gson().fromJson(it, ChatDto.ChatMessageDto::class.java)
-                            getCustomMessage(customMessage)
-                        }
-                    }
-                }
-                Event.Type.CLOSED -> {
-
-                }
-                Event.Type.ERROR -> {
-
-                }
+        chatClient.topic("/topic/$chatRoomId").subscribe{
+            it?.let {
+                val customMessage: ChatDto.ChatMessageDto =
+                    Gson().fromJson(it.payload, ChatDto.ChatMessageDto::class.java)
+                getCustomMessage(customMessage)
             }
         }
+        chatClient.connect()
+
     }
 
     fun getCustomMessage(customMessage: ChatDto.ChatMessageDto) {
